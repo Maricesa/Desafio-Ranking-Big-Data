@@ -1,6 +1,5 @@
-import openpyxl
-from openpyxl import load_workbook
 import pandas as pd
+import openpyxl
 import glob
 import os
 
@@ -8,20 +7,21 @@ import os
 folder_path = 'DESAFIO_RANKING\\src\\data\\raw\\'
 
 #Carrega os arquivos
-workbook = pd.read_excel(folder_path)
+book = pd.read_excel(folder_path)
 
 #lista todos os arquivos de excel
-workbook = glob.glob(os.path.join(folder_path,'*.xlsx'))
+book = glob.glob(os.path.join(folder_path,'*.xlsx'))
+for excel_file in book:
+ print(excel_file.filename)
 
-
-if not workbook:
+if not book:
     print('Nenhum arquivo compatível encontrado!')
 
 else:
     #tabela na memória para guardar os arquivos
-    dfs = []
+    dfs = [folder_path]
     
-    for excel_file in workbook:
+    for excel_file in book:
         try:
             #Salva o arquivo a ser lido numa dataframe temporária
             df_temp = openpyxl.load_workbook(excel_file)            
@@ -52,10 +52,8 @@ else:
             arq_final.save('Planilha final.xlsx')
             print("Os dados foram copiados com sucesso")
 
-
             print (arq_final)
-   
-        
+           
         except Exception as e:
              print(f'Erro ao ler o arquivo {excel_file}: {e} ')
 
