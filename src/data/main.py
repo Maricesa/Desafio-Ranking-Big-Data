@@ -24,24 +24,27 @@ else:
     for excel_file in book:
         try:
             #Salva o arquivo a ser lido numa dataframe temporária
-            df_temp = openpyxl.load_workbook(excel_file)            
+            df_temp = openpyxl.load_workbook(excel_file)
+
+            #lê as abas do arquivo
+            df_temp = pd.read_excel(excel_file,sheet_name=[])          
                 
             #cria uma nova planilha para escrita dos dados
-            arq_final = openpyxl.workbook()  
+            file_ready = openpyxl.workbook()  
 
             #carrega o arquivo de origem para copiar os dados
-            arq_o1 = openpyxl.load_workbook(df_temp)
-            arq_i = arq_o1.active
+            file_o1 = openpyxl.load_workbook(df_temp)
+            file_i = file_o1.active
 
             #Carrega o arquivo de destino
-            arq_d2 = openpyxl.load_workbook(arq_final)
-            arq_i2 = arq_d2.active
+            file_d2 = openpyxl.load_workbook(file_ready)
+            file_i2 = file_d2.active
 
             # Especificação do intervalo de células de origem (por exemplo, A1:C10)
-            intervalo_origem = arq_o1['E6:E32']
+            intervalo_origem = file_o1['E6:W1']
 
             # Especificação do intervalo de células de destino (por exemplo, D1:F10)
-            intervalo_destino = arq_d2['A1:A32']
+            intervalo_destino = file_d2['A1:A32']
 
             #Copia os valores do intervalo de origem para o intervalo de destino
             for row_origem, row_destino in zip(intervalo_origem, intervalo_destino):
@@ -49,10 +52,12 @@ else:
                     cell_destino.value = cell_origem.value
             
             #Salva o arquivo de destino
-            arq_final.save('Planilha final.xlsx')
+            file_ready.save('Planilha final.xlsx')
             print("Os dados foram copiados com sucesso")
 
-            print (arq_final)
+            print (file_ready)
+
+            dfs.append(file_ready)
            
         except Exception as e:
              print(f'Erro ao ler o arquivo {excel_file}: {e} ')
